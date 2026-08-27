@@ -6,6 +6,8 @@ on:
     branches:
       - main
   push:
+    branches:
+      - main
     tags:
       - "v*"
 
@@ -37,6 +39,14 @@ jobs:
         run: |
           if ("$env:GITHUB_REF_TYPE" -eq "tag") {
             $version = "$env:GITHUB_REF_NAME".TrimStart("v")
+          } elseif ("$env:GITHUB_EVENT_NAME" -eq "push" -and "$env:GITHUB_REF_NAME" -eq "main") {
+            $versionLine = Select-String -Path "main.py" -Pattern '^APP_VERSION = "([0-9]+\.[0-9]+\.[0-9]+)"$'
+
+            if (-not $versionLine) {
+              throw "APP_VERSION non trovata o non valida in main.py"
+            }
+
+            $version = $versionLine.Matches[0].Groups[1].Value
           } else {
             $version = "dev-" + "$env:GITHUB_SHA".Substring(0, 7)
           }
@@ -59,30 +69,49 @@ jobs:
 
   publish-release:
     name: Publish GitHub Release files
-    if: github.ref_type == 'tag'
+    if: github.ref_type == 'tag' || (github.event_name == 'push' && github.ref == 'refs/heads/main')
     needs: build-windows
     runs-on: ubuntu-latest
     permissions:
       contents: write
 
     steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
+
       - name: Download Windows package
         uses: actions/download-artifact@v4
         with:
           name: MarkItDownConverter-Windows-x64
           path: release
 
-      - name: Attach files to GitHub Release
+      - name: Create or update GitHub Release
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          tag="$GITHUB_REF_NAME"
+          if [ "$GITHUB_REF_TYPE" = "tag" ]; then
+            tag="$GITHUB_REF_NAME"
+          else
+            version=$(sed -n 's/^APP_VERSION = "\([0-9][0-9]*\.[0-9][0-9]*\.[0-9][0-9]*\)"$/\1/p' main.py)
+
+            if [ -z "$version" ]; then
+              echo "APP_VERSION non trovata o non valida in main.py"
+              exit 1
+            fi
+
+            tag="v$version"
+
+            if gh release view "$tag" >/dev/null 2>&1; then
+              echo "La Release $tag esiste gia: nessuna nuova pubblicazione."
+              exit 0
+            fi
+          fi
 
           if gh release view "$tag" >/dev/null 2>&1; then
             gh release upload "$tag" release/*.zip release/SHA256SUMS.txt --clobber
           else
             gh release create "$tag" release/*.zip release/SHA256SUMS.txt \
-              --verify-tag \
+              --target "$GITHUB_SHA" \
               --generate-notes \
               --title "MarkItDown Converter $tag"
           fi
