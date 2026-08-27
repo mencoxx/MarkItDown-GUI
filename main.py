@@ -23,8 +23,19 @@ import tkinter as tk
 from tkinter import ttk, filedialog, messagebox, scrolledtext
 
 APP_TITLE = "MarkItDown Converter"
-APP_VERSION = "1.0.0"
+APP_VERSION = "1.0.1"
 REPO_URL = "https://github.com/microsoft/markitdown"
+
+
+def get_markitdown_version() -> str:
+    """Restituisce la versione del motore MarkItDown installato."""
+    try:
+        from markitdown import __version__
+
+        return __version__
+    except Exception:
+        return "non disponibile"
+
 
 # Lunghezza massima dell'anteprima del markdown mostrata nel log (caratteri)
 PREVIEW_MAX_CHARS = 2000
@@ -213,6 +224,7 @@ class MarkItDownGUI:
             "Informazioni",
             f"{APP_TITLE} v{APP_VERSION}\n\n"
             "Basato su MarkItDown di Microsoft\n"
+            f"Versione MarkItDown: {get_markitdown_version()}\n"
             f"{REPO_URL}\n\n"
             "Realizzato da Leonardo Cozzolino",
         )
@@ -319,7 +331,9 @@ class MarkItDownGUI:
             )
 
             md = MarkItDown()
-            result = md.convert(input_path)
+            # La GUI accetta esclusivamente file locali selezionati dall’utente.
+            # convert_local() applica quindi l’API più restrittiva e appropriata.
+            result = md.convert_local(input_path)
             content = getattr(result, "markdown", None) or getattr(result, "text_content", "") or ""
 
             target_dir.mkdir(parents=True, exist_ok=True)

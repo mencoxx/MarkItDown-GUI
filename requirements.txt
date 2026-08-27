@@ -1,2 +1,2 @@
-markitdown[all]
+markitdown[all]==0.1.7
 pyinstaller

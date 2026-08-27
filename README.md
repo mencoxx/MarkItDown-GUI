@@ -5,6 +5,8 @@ Markdown, basata su [MarkItDown di Microsoft](https://github.com/microsoft/marki
 
 Realizzato da **Leonardo Cozzolino**.
 
+Versione applicazione: **1.0.1** — motore Microsoft MarkItDown **0.1.7**.
+
 ## Formati supportati
 
 PDF, DOCX, PPTX, XLSX, XLS, immagini (JPG/PNG), audio (WAV/MP3), HTML, CSV,
@@ -14,6 +16,7 @@ JSON, XML, ZIP, EPUB.
 
 - Selezione del file da convertire tramite finestra di dialogo.
 - Scelta della cartella di output (di default la stessa del file originale).
+- Conversione locale tramite `convert_local()`, l’API più restrittiva indicata per file selezionati dal computer.
 - Conversione eseguita in un thread separato: la finestra resta reattiva.
 - Log di avanzamento e anteprima del Markdown generato.
 - Pulsanti rapidi per aprire la cartella di output o il file `.md` prodotto.
@@ -22,7 +25,7 @@ JSON, XML, ZIP, EPUB.
 
 ## Uso in locale (modalità script)
 
-Richiede Python 3.10+.
+Richiede Python 3.10+. La versione di MarkItDown è fissata a `0.1.7` nel file `requirements.txt`, così installazioni e build utilizzano lo stesso motore verificato.
 
 ```bat
 pip install -r requirements.txt
