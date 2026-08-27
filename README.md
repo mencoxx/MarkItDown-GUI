@@ -73,25 +73,23 @@ dipendenza**.
 
 ## Pubblicazione automatica di una versione
 
-Il workflow GitHub Actions `windows-release.yml` compila automaticamente
-l'eseguibile su Windows quando viene creato un tag che inizia con `v`.
+Il workflow GitHub Actions `windows-release.yml` legge `APP_VERSION` da
+`main.py`. Dopo un aggiornamento del ramo `main`:
 
-Per pubblicare una versione:
+1. compila e verifica l'eseguibile su Windows;
+2. crea automaticamente il tag `v<APP_VERSION>`, se non esiste;
+3. pubblica la relativa GitHub Release;
+4. allega `MarkItDownConverter-<versione>-Windows-x64.zip` e
+   `SHA256SUMS.txt`.
 
-1. Apri la sezione **Releases** del repository.
-2. Seleziona **Draft a new release**.
-3. Crea un tag corrispondente alla versione, per esempio `v1.0.1`, sul ramo
-   `main`.
-4. Inserisci titolo e note, quindi pubblica la Release.
-5. Attendi il completamento del workflow **Build Windows executable**.
+Se la Release della versione indicata esiste già, non viene pubblicata
+nuovamente. Per creare una nuova versione è quindi necessario aggiornare
+`APP_VERSION` in `main.py` prima di integrare le modifiche in `main`.
 
-Il workflow allega automaticamente alla Release:
-
-- `MarkItDownConverter-<versione>-Windows-x64.zip`;
-- `SHA256SUMS.txt`, per verificare l'integrità dello ZIP.
-
-Il workflow può essere avviato anche manualmente dalla scheda **Actions**:
-in questo caso produce un artefatto di test, ma non pubblica una Release.
+Le pull request eseguono soltanto la build di controllo con permessi di lettura.
+Il permesso di scrittura è riservato al job di pubblicazione sul ramo `main`.
+Il workflow può anche essere avviato manualmente dalla scheda **Actions** per
+produrre un artefatto di test senza pubblicare una nuova Release.
 
 ## Note su dipendenze opzionali
 
