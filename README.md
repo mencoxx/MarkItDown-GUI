@@ -7,6 +7,21 @@ Realizzato da **Leonardo Cozzolino**.
 
 Versione applicazione: **1.0.1** — motore Microsoft MarkItDown **0.1.7**.
 
+## Download per utenti Windows
+
+Scarica l'ultima versione dalla pagina
+[Releases](https://github.com/mencoxx/MarkItDown-GUI/releases/latest).
+
+1. Scarica il file `MarkItDownConverter-<versione>-Windows-x64.zip`.
+2. Estrai lo ZIP in una cartella.
+3. Avvia `MarkItDownConverter.exe`.
+
+Non è necessario installare Python o altre dipendenze. Scarica l'eseguibile
+soltanto dalla pagina Releases ufficiale di questo repository.
+
+> L'eseguibile non è firmato digitalmente. Windows SmartScreen potrebbe quindi
+> mostrare un avviso anche se il file proviene dal repository ufficiale.
+
 ## Formati supportati
 
 PDF, DOCX, PPTX, XLSX, XLS, immagini (JPG/PNG), audio (WAV/MP3), HTML, CSV,
@@ -16,7 +31,7 @@ JSON, XML, ZIP, EPUB.
 
 - Selezione del file da convertire tramite finestra di dialogo.
 - Scelta della cartella di output (di default la stessa del file originale).
-- Conversione locale tramite `convert_local()`, l’API più restrittiva indicata per file selezionati dal computer.
+- Conversione locale tramite `convert_local()`, l'API più restrittiva indicata per file selezionati dal computer.
 - Conversione eseguita in un thread separato: la finestra resta reattiva.
 - Log di avanzamento e anteprima del Markdown generato.
 - Pulsanti rapidi per aprire la cartella di output o il file `.md` prodotto.
@@ -32,7 +47,7 @@ pip install -r requirements.txt
 python main.py
 ```
 
-## Generazione dell'eseguibile standalone (.exe)
+## Generazione manuale dell'eseguibile
 
 Lo script `build.bat` crea automaticamente un ambiente virtuale di build,
 installa le dipendenze e genera un eseguibile **portabile e standalone**
@@ -53,9 +68,30 @@ necessarie (markitdown, magika, onnxruntime, ecc.): può essere copiato e
 lanciato su un altro PC Windows **senza installare Python, pip o alcuna
 dipendenza**.
 
-> Nota: la prima esecuzione di `build.bat` può richiedere alcuni minuti,
-> perché `markitdown[all]` installa diverse librerie opzionali (motore di
-> rilevamento formato, parsing PDF/Office, ecc.).
+> La prima esecuzione di `build.bat` può richiedere alcuni minuti, perché
+> `markitdown[all]` installa diverse librerie opzionali.
+
+## Pubblicazione automatica di una versione
+
+Il workflow GitHub Actions `windows-release.yml` compila automaticamente
+l'eseguibile su Windows quando viene creato un tag che inizia con `v`.
+
+Per pubblicare una versione:
+
+1. Apri la sezione **Releases** del repository.
+2. Seleziona **Draft a new release**.
+3. Crea un tag corrispondente alla versione, per esempio `v1.0.1`, sul ramo
+   `main`.
+4. Inserisci titolo e note, quindi pubblica la Release.
+5. Attendi il completamento del workflow **Build Windows executable**.
+
+Il workflow allega automaticamente alla Release:
+
+- `MarkItDownConverter-<versione>-Windows-x64.zip`;
+- `SHA256SUMS.txt`, per verificare l'integrità dello ZIP.
+
+Il workflow può essere avviato anche manualmente dalla scheda **Actions**:
+in questo caso produce un artefatto di test, ma non pubblica una Release.
 
 ## Note su dipendenze opzionali
 
@@ -71,6 +107,7 @@ dipendenza**.
 
 ```
 markitdown-gui/
+├── .github/workflows/   # build e pubblicazione automatica
 ├── main.py              # GUI + logica applicazione
 ├── requirements.txt     # markitdown[all], pyinstaller
 ├── build.bat            # script per generare l'exe con PyInstaller

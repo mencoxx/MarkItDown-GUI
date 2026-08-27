@@ -1,0 +1,88 @@
+name: Build Windows executable
+
+on:
+  workflow_dispatch:
+  pull_request:
+    branches:
+      - main
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: read
+
+jobs:
+  build-windows:
+    name: Build Windows x64
+    runs-on: windows-latest
+    timeout-minutes: 45
+
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: "pip"
+
+      - name: Build executable
+        shell: cmd
+        run: build.bat
+
+      - name: Create ZIP and SHA-256 checksum
+        shell: pwsh
+        run: |
+          if ("$env:GITHUB_REF_TYPE" -eq "tag") {
+            $version = "$env:GITHUB_REF_NAME".TrimStart("v")
+          } else {
+            $version = "dev-" + "$env:GITHUB_SHA".Substring(0, 7)
+          }
+
+          $zipName = "MarkItDownConverter-$version-Windows-x64.zip"
+          Compress-Archive -Path "dist\MarkItDownConverter.exe" -DestinationPath "dist\$zipName" -Force
+
+          $hash = (Get-FileHash "dist\$zipName" -Algorithm SHA256).Hash.ToLowerInvariant()
+          "$hash  $zipName" | Set-Content "dist\SHA256SUMS.txt" -Encoding ascii
+
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: MarkItDownConverter-Windows-x64
+          path: |
+            dist/*.zip
+            dist/SHA256SUMS.txt
+          if-no-files-found: error
+          retention-days: 14
+
+  publish-release:
+    name: Publish GitHub Release files
+    if: github.ref_type == 'tag'
+    needs: build-windows
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Download Windows package
+        uses: actions/download-artifact@v4
+        with:
+          name: MarkItDownConverter-Windows-x64
+          path: release
+
+      - name: Attach files to GitHub Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          tag="$GITHUB_REF_NAME"
+
+          if gh release view "$tag" >/dev/null 2>&1; then
+            gh release upload "$tag" release/*.zip release/SHA256SUMS.txt --clobber
+          else
+            gh release create "$tag" release/*.zip release/SHA256SUMS.txt \
+              --verify-tag \
+              --generate-notes \
+              --title "MarkItDown Converter $tag"
+          fi
