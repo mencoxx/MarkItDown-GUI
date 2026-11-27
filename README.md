@@ -1,46 +1,100 @@
 # MarkItDown Converter
 
-Applicazione desktop Windows con interfaccia grafica per convertire file in
-Markdown, basata su [MarkItDown di Microsoft](https://github.com/microsoft/markitdown).
+<p align="center">
+  <strong>Converti PDF, Word, PowerPoint, Excel e altri file in Markdown su Windows.</strong><br>
+  Nessun comando da usare. Nessuna installazione di Python.
+</p>
 
-Realizzato da **Leonardo Cozzolino**.
+<p align="center">
+  <a href="https://github.com/mencoxx/MarkItDown-GUI/releases/latest">
+    <img src="https://img.shields.io/github/v/release/mencoxx/MarkItDown-GUI?label=Scarica%20per%20Windows&logo=windows&logoColor=white" alt="Scarica per Windows">
+  </a>
+  <a href="https://github.com/mencoxx/MarkItDown-GUI/blob/main/LICENSE">
+    <img src="https://img.shields.io/github/license/mencoxx/MarkItDown-GUI" alt="Licenza">
+  </a>
+  <a href="https://github.com/microsoft/markitdown">
+    <img src="https://img.shields.io/badge/basato%20su-Microsoft%20MarkItDown-5c2d91" alt="Basato su Microsoft MarkItDown">
+  </a>
+</p>
 
-Versione applicazione: **1.0.2** — motore Microsoft MarkItDown **0.1.9**.
+Applicazione desktop gratuita e open source, realizzata da **Leonardo Cozzolino**,
+per trasformare documenti e file multimediali in Markdown tramite una semplice
+interfaccia grafica.
 
-## Download per utenti Windows
+## Download rapido
 
-Scarica l'ultima versione dalla pagina
-[Releases](https://github.com/mencoxx/MarkItDown-GUI/releases/latest).
+[**Scarica MarkItDown Converter per Windows**](https://github.com/mencoxx/MarkItDown-GUI/releases/latest)
 
 1. Scarica il file `MarkItDownConverter-<versione>-Windows-x64.zip`.
-2. Estrai lo ZIP in una cartella.
+2. Estrai il file ZIP in una cartella.
 3. Avvia `MarkItDownConverter.exe`.
 
-Non è necessario installare Python o altre dipendenze. Scarica l'eseguibile
-soltanto dalla pagina Releases ufficiale di questo repository.
+Non devi installare Python, pip o altre librerie.
 
-> L'eseguibile non è firmato digitalmente. Windows SmartScreen potrebbe quindi
-> mostrare un avviso anche se il file proviene dal repository ufficiale.
+> Windows SmartScreen potrebbe mostrare un avviso perché l'eseguibile non è
+> firmato digitalmente. Il file ufficiale è pubblicato nella pagina Releases di
+> questo repository.
+
+## A cosa serve
+
+MarkItDown Converter è pensato per chi deve usare i contenuti dei propri file
+in strumenti di AI, sistemi di ricerca, knowledge base o applicazioni che
+lavorano meglio con testo strutturato.
+
+La conversione viene eseguita localmente sul computer: i file selezionati non
+vengono caricati su un servizio esterno dalla GUI.
 
 ## Formati supportati
 
-PDF, DOCX, PPTX, XLSX, XLS, immagini (JPG/PNG), audio (WAV/MP3), HTML, CSV,
-JSON, XML, ZIP, EPUB.
+- PDF
+- Word `.docx`
+- PowerPoint `.pptx`
+- Excel `.xlsx` e `.xls`
+- Immagini `.jpg`, `.jpeg`, `.png`
+- Audio `.wav`, `.mp3`
+- HTML
+- CSV
+- JSON
+- XML
+- ZIP
+- EPUB
 
 ## Funzionalità
 
-- Selezione del file da convertire tramite finestra di dialogo.
-- Scelta della cartella di output (di default la stessa del file originale).
-- Conversione locale tramite `convert_local()`, l'API più restrittiva indicata per file selezionati dal computer.
-- Conversione eseguita in un thread separato: la finestra resta reattiva.
-- Log di avanzamento e anteprima del Markdown generato.
-- Pulsanti rapidi per aprire la cartella di output o il file `.md` prodotto.
-- Messaggi di errore chiari per file non validi o dipendenze opzionali
-  mancanti.
+- selezione del file tramite finestra di dialogo;
+- scelta della cartella di output;
+- conversione locale con l'API restrittiva `convert_local()`;
+- interfaccia reattiva durante la conversione;
+- log di avanzamento;
+- anteprima del Markdown generato;
+- apertura rapida della cartella o del file prodotto;
+- messaggi chiari in caso di formato non supportato o dipendenze mancanti.
 
-## Uso in locale (modalità script)
+## Utilizzo
 
-Richiede Python 3.10+. Nel file `requirements.txt`, MarkItDown è fissato a `0.1.9` e PyInstaller a `6.22.3`, così installazioni e build restano riproducibili.
+Dopo aver avviato il programma:
+
+1. premi **Seleziona file**;
+2. scegli il documento da convertire;
+3. scegli eventualmente una cartella di output;
+4. premi **Converti**;
+5. apri il file Markdown generato.
+
+## Versione attuale
+
+- Applicazione: **1.0.2**
+- Motore Microsoft MarkItDown: **0.1.9**
+- Sistema operativo: **Windows x64**
+
+## Uso in locale per sviluppatori
+
+Richiede Python 3.10 o superiore.
+
+Le versioni sono fissate in `requirements.txt` per rendere riproducibili
+installazione e build:
+
+- MarkItDown `0.1.9`
+- PyInstaller `6.22.3`
 
 ```bat
 pip install -r requirements.txt
@@ -49,66 +103,34 @@ python main.py
 
 ## Generazione manuale dell'eseguibile
 
-Lo script `build.bat` crea automaticamente un ambiente virtuale di build,
-installa le dipendenze e genera un eseguibile **portabile e standalone**
-con PyInstaller:
+Lo script `build.bat` crea un ambiente virtuale di build e genera un
+eseguibile standalone:
 
 ```bat
 build.bat
 ```
 
-Al termine, l'eseguibile si trova in:
+L'output viene creato in:
 
 ```
-dist\MarkItDownConverter.exe
+dist\\MarkItDownConverter.exe
 ```
 
-Questo file include l'interprete Python (embedded) e tutte le librerie
-necessarie (markitdown, magika, onnxruntime, ecc.): può essere copiato e
-lanciato su un altro PC Windows **senza installare Python, pip o alcuna
-dipendenza**.
+## Pubblicazione automatica
 
-> La prima esecuzione di `build.bat` può richiedere alcuni minuti, perché
-> `markitdown[all]` installa diverse librerie opzionali.
+Il workflow GitHub Actions:
 
-## Pubblicazione automatica di una versione
+- verifica ogni pull request;
+- compila l'eseguibile su Windows;
+- crea ZIP e checksum SHA-256;
+- pubblica automaticamente una nuova Release quando cambia `APP_VERSION`
+  in `main.py`.
 
-Il workflow GitHub Actions `windows-release.yml` legge `APP_VERSION` da
-`main.py`. Dopo un aggiornamento del ramo `main`:
+## Progetto originale
 
-1. compila e verifica l'eseguibile su Windows;
-2. crea automaticamente il tag `v<APP_VERSION>`, se non esiste;
-3. pubblica la relativa GitHub Release;
-4. allega `MarkItDownConverter-<versione>-Windows-x64.zip` e
-   `SHA256SUMS.txt`.
+Il motore di conversione è [MarkItDown di Microsoft](https://github.com/microsoft/markitdown).
 
-Se la Release della versione indicata esiste già, non viene pubblicata
-nuovamente. Per creare una nuova versione è quindi necessario aggiornare
-`APP_VERSION` in `main.py` prima di integrare le modifiche in `main`.
+## Licenza
 
-Le pull request eseguono soltanto la build di controllo con permessi di lettura.
-Il permesso di scrittura è riservato al job di pubblicazione sul ramo `main`.
-Il workflow può anche essere avviato manualmente dalla scheda **Actions** per
-produrre un artefatto di test senza pubblicare una nuova Release.
-
-## Note su dipendenze opzionali
-
-- La conversione di file audio può richiedere `ffmpeg` installato nel
-  sistema per l'estrazione/transcodifica; in sua assenza l'app mostra un
-  errore chiaro invece di bloccarsi.
-- Se per un determinato formato manca una libreria opzionale di MarkItDown,
-  l'app mostra un messaggio con l'indicazione del comando
-  `pip install "markitdown[all]"` da eseguire (utile solo in modalità
-  script: l'eseguibile compilato con `build.bat` le include già tutte).
-
-## Struttura del progetto
-
-```
-markitdown-gui/
-├── .github/workflows/   # build e pubblicazione automatica
-├── main.py              # GUI + logica applicazione
-├── requirements.txt     # markitdown[all], pyinstaller
-├── build.bat            # script per generare l'exe con PyInstaller
-├── icon.ico             # icona dell'applicazione
-└── README.md            # questo file
-```
+Il progetto è distribuito con la licenza presente nel file
+[LICENSE](https://github.com/mencoxx/MarkItDown-GUI/blob/main/LICENSE).
