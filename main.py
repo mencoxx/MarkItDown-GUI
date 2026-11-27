@@ -23,7 +23,7 @@ import tkinter as tk
 from tkinter import ttk, filedialog, messagebox, scrolledtext
 
 APP_TITLE = "MarkItDown Converter"
-APP_VERSION = "1.0.1"
+APP_VERSION = "1.0.2"
 REPO_URL = "https://github.com/microsoft/markitdown"
 
 
