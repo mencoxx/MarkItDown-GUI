@@ -5,7 +5,7 @@ Markdown, basata su [MarkItDown di Microsoft](https://github.com/microsoft/marki
 
 Realizzato da **Leonardo Cozzolino**.
 
-Versione applicazione: **1.0.1** — motore Microsoft MarkItDown **0.1.7**.
+Versione applicazione: **1.0.2** — motore Microsoft MarkItDown **0.1.9**.
 
 ## Download per utenti Windows
 
@@ -40,7 +40,7 @@ JSON, XML, ZIP, EPUB.
 
 ## Uso in locale (modalità script)
 
-Richiede Python 3.10+. La versione di MarkItDown è fissata a `0.1.7` nel file `requirements.txt`, così installazioni e build utilizzano lo stesso motore verificato.
+Richiede Python 3.10+. Nel file `requirements.txt`, MarkItDown è fissato a `0.1.9` e PyInstaller a `6.22.3`, così installazioni e build restano riproducibili.
 
 ```bat
 pip install -r requirements.txt
