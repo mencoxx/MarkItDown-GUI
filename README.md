@@ -35,6 +35,13 @@ Non devi installare Python, pip o altre librerie.
 > firmato digitalmente. Il file ufficiale è pubblicato nella pagina Releases di
 > questo repository.
 
+## Anteprima
+
+![Interfaccia di MarkItDown Converter](docs/screenshot.png)
+
+L'interfaccia consente di selezionare un file, scegliere la cartella di output
+e avviare la conversione con un solo pulsante.
+
 ## A cosa serve
 
 MarkItDown Converter è pensato per chi deve usare i contenuti dei propri file
